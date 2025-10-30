@@ -1,0 +1,38 @@
+Select Queries:
+-1 SELECT * FROM `employee`;
+-2 SELECT `Fname`, `Lname`,`Salary`,`Dno` FROM `employee`;
+-3 SELECT `Pname`,`Plocation`,`Dnum` FROM `project`;
+-4 SELECT `Fname`, `Lname` ,( (Salary * 12) + ( (Salary * 12) * 0.1)) as `ANNUAL COMM` FROM `employee`;
+-5 SELECT `SSN`,`Fname`,`Lname` FROM `employee` WHERE Salary > 1000;
+-6 SELECT `SSN`,`Fname`,`Lname` FROM `employee` WHERE Salary > 10000;
+-7 SELECT `Fname`,`Lname`,`Salary` FROM `employee` WHERE `gender` = 'F';
+-8 SELECT `Dnum`, `Dname` FROM `departments` WHERE MGRSSN = '968574';
+-9 SELECT `Pname`,`Plocation` FROM `project` WHERE Dnum = '10';
+
+
+dml:-
+-1 INSERT INTO `employee`(`Fname`, `Lname`, `SSN`, `Bdate`, `Address`, `gender`, `Salary`, `Superssn`, `Dno`) 
+VALUES ('Abdullh','Gaber',102672,'2002-05-04 00:00:00.000000','Alexandria','M',12500,112233,30);
+
+-2 INSERT INTO `employee`(`Fname`, `Lname`, `SSN`, `Bdate`, `Address`, `gender`,`Dno`) 
+VALUES ('Khaled','Waleed',102660,'2002-07-26 00:00:00.000000','Alexandria','M',30);
+
+-3 INSERT INTO `departments`(`Dname`, `Dnum`, `MGRSSN`, `MGRStart Date`)
+ VALUES ('DEPT IT',100,112233,'2006-01-11 00:00:00.000000');
+
+-4 
+   UPDATE `departments` SET MGRSSN = NULL WHERE Dnum = 100
+   UPDATE `departments` SET MGRSSN = 968574 WHERE Dnum = 100
+   UPDATE `departments` SET MGRSSN = 102672, WHERE Dnum = 20
+   UPDATE `employee`    SET `Superssn`= 102672 WHERE SSN = 102660
+
+-5 UPDATE `employee` SET `Superssn`= NULL WHERE Superssn = 223344 
+   UPDATE departments SET MGRSSN = 102660 WHERE Dnum = 10
+   DELETE FROM works_for WHERE ESSn = 223344
+   DELETE FROM employee WHERE ssn = 223344
+   
+    
+
+-6 UPDATE `employee` SET `Salary`= Salary + Salary*0.2 WHERE SSN = 102672
+
+
