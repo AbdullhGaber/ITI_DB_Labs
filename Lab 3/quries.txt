@@ -1,0 +1,149 @@
+1. Display the Department id, name, and id and the name of its manager.
+SELECT departments.Dname , departments.Dnum, departments.MGRSSN , employee.F_name FROM 
+`departments` INNER JOIN employee ON departments.MGRSSN = employee.ssn;
+
+=========================================================
+
+
+2. Display the name of the departments and the name of the projects under its control.
+
+SELECT departments.Dname ,projects.Pname FROM `departments` 
+INNER JOIN projects ON  departments.Dnum = projects.Dnum;
+
+=========================================================
+
+3. Display the full data about all the dependence associated with the name of the employee they depend on him/her.
+SELECT * FROM `dependent` INNER JOIN employee ON dependent.ESSN = employee.SSN;
+=========================================================
+
+4. Display (Using Union Function)
+a.  The name and the gender of the dependence that's gender is Female and depending on Female Employee.
+
+SELECT dependent.Dependent_name , dependent.Sex FROM dependent 
+INNER JOIN
+employee ON dependent.ESSN = employee.SSN AND dependent.Sex = employee.gender WHERE dependent.Sex = 'F'
+UNION
+SELECT employee.Fname ,employee.gender 
+FROM employee JOIN dependent 
+ON employee.SSN = dependent.ESSN AND employee.gender = dependent.Sex WHERE employee.gender = 'F';
+==================================================================================================================
+b.  And the male dependence that depends on Male Employee.
+
+SELECT dependent.Dependent_name , dependent.Sex 
+FROM 
+dependent 
+INNER JOIN
+employee ON dependent.ESSN = employee.SSN AND dependent.Sex = employee.Sex 
+WHERE dependent.Sex = 'M'
+UNION 
+SELECT employee.F_name ,employee.Sex 
+FROM 
+employee
+INNER JOIN
+dependent ON employee.SSN = dependent.ESSN AND employee.Sex =dependent.Sex WHERE employee.Sex = 'M';
+
+=========================================================
+
+5. Display the Id, name and location of the projects in Cairo or Alex city.
+SELECT `Pname`, `Pnumber`, `Plocation` FROM `projects` WHERE `city` ='Cairo' or city = 'Alex';
+
+=========================================================
+
+6. Display the Projects full data of the projects with a name starts with "a" letter.
+SELECT * FROM `projects` WHERE `Pname` LIKE 'A%';
+
+=========================================================
+
+7. display all the employees in department 30 whose salary from 1000 to 2000 LE monthly
+SELECT * FROM `employee` WHERE Dno = 30 and Salary BETWEEN 1000 and 2000;
+
+=========================================================
+
+8. Retrieve the names of all employees in department 10 who works more than or equal 10 hours per week on "AL Rabwah" project.
+SELECT DISTINCT Fname, Lname FROM `employee` INNER JOIN  works_for ON  works_for.ESSN = employee.ssn INNER JOIN project ON  works_for.Pno = project.Pnumber WHERE employee.Dno = 10 AND project.Pname ="AL Rabwah";;
+=========================================================
+
+9. Find the names of the employees who directly supervised with Kamel Mohamed.
+SELECT e.Fname, e.Lname FROM `employee` e JOIN employee s ON s.ssn = e.Superssn WHERE s.Fname = 'Kamel' AND s.Lname = 'Mohamed';
+
+=========================================================
+
+10. For each project, list the project name , and the total hours per week (for all employees) spent on that project.
+
+SELECT project.Pname, SUM(works_for.Hours) AS total_hours_for_project FROM
+project
+INNER JOIN
+works_for
+ON project.Pnumber = works_for.Pno
+GROUP BY project.Pname 
+
+=========================================================
+
+11. Retrieve the names of all employees and the names of the projects they are working on, sorted by the project name.
+SELECT DISTINCT Fname , Lname, Pname FROM `employee` INNER JOIN works_for ON works_for.ESSN = employee.SSN INNER JOIN project ON works_for.Pno = project.Pnumber ORDER BY project.Pname ASC;
+
+=========================================================
+
+12. Display the data of the department which has the smallest employee ID over all employees' ID.
+SELECT d.* FROM departments d
+JOIN employee e ON d.Dnum = e.Dno
+WHERE e.SSN = (SELECT MIN(SSN) FROM employee);
+
+
+=========================================================
+
+13. For each department, retrieve the department name and the maximum, minimum and average salary of its employees.
+SELECT departments.Dname , MIN(Salary) as min_salary , MAX(Salary) AS max_salary , AVG(Salary) AS avreage_salary 
+FROM `employee` 
+INNER JOIN departments
+ON employee.Dno = departments.Dnum
+GROUP BY departments.Dname;
+
+=========================================================
+
+14. List the last name of all managers who have no dependents.
+SELECT DISTINCT employee.Lname FROM
+`employee`
+INNER JOIN
+departments 
+ON employee.SSN = departments.MGRSSN 
+WHERE employee.SSN NOT IN (SELECT dependent.ESSN FROM dependent )
+
+=========================================================
+
+15. For each department-- if its average salary is less than the average salary of all departments--
+display its number, name and number of its employees.
+
+SELECT departments.Dnum, departments.Dname, COUNT(employee.SSN) AS emp_numbers
+FROM departments
+JOIN employee
+ON departments.Dnum = employee.Dno
+GROUP BY departments.Dnum, departments.Dname
+HAVING AVG(employee.Salary) < (SELECT AVG(Salary) FROM employee);
+
+=========================================================
+
+16. Retrieve a list of employees and the projects they are working on ordered by department
+ and within each department, ordered alphabetically by last name, first name.
+
+SELECT employee.Fname, employee.Lname , project.Pname FROM employee 
+INNER JOIN works_for 
+ON employee.SSN = works_for.ESSN 
+INNER JOIN project
+ON works_for.Pno = project.Pnumber
+ORDER BY employee.dno, employee.Lname ASC , employee.Fname ASC;
+
+=========================================================
+
+17. For each project located in Cairo City , find the project number, the controlling department name ,the department manager last name ,address and birthdate.
+
+SELECT projects.Pnumber , departments.Dname , employee.Lname , employee.Address , employee.BDATE FROM 
+projects
+INNER JOIN 
+departments ON projects.Dnum = departments.Dnum 
+INNER JOIN
+employee 
+ON departments.MGRSSN = employee.SSN 
+WHERE projects.city = 'cairo';
+
+
